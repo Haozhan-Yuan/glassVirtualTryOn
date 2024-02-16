@@ -102,6 +102,18 @@
         }) // end JEELIZVTOWIDGET.start call
       } // end main()
 
+      document.addEventListener('DOMContentLoaded', (event) => {
+  const showTryOnBtn = document.getElementById('showVirtualTryOnButton');
+  const widgetContainer = document.getElementById('JeelizVTOWidget');
+  
+  showTryOnBtn.addEventListener('click', () => {
+    if(widgetContainer.style.display === 'none') {
+      widgetContainer.style.display = 'block'; // Show the widget
+    } else {
+      widgetContainer.style.display = 'none'; // Hide the widget
+    }
+  });
+});
 
       function load_modelBySKU(){
         const sku = prompt('Please enter a glasses model SKU:', 'rayban_wayfarer_havane_marron');
@@ -132,6 +144,7 @@
         you need to size and position it according to where the VTO widget should be
         if you resize it, the widget will be automatically resized
       -->
+      <button id="showVirtualTryOnButton">Try Glasses On</button>
       <div id='JeelizVTOWidget'>
         <!-- MAIN CANVAS: -->
         <!-- 
