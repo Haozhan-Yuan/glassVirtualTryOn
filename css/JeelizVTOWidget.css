@@ -105,6 +105,7 @@ button:hover {
 }
 
 #JeelizVTOWidgetLoading {
+  display: none;
   position: fixed;
   z-index: 4;
   cursor: wait;
