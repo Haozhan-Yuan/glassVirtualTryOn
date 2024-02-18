@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -21,7 +22,12 @@
 
     <script>
       let _isResized = false;
-
+    import React, { useState } from 'react';
+    import Dialog from '@mui/material/Dialog';
+    import DialogTitle from '@mui/material/DialogTitle';
+    import DialogContent from '@mui/material/DialogContent';
+    import Button from '@mui/material/Button';
+    import { JEELIZVTOWIDGET } from 'jeelizvtowidget';
       function test_resizeCanvas() {
         // halves the height:
         let halfHeightPx = Math.round(window.innerHeight / 2).toString() + 'px';
@@ -41,6 +47,12 @@
         console.log('Initial SKU =', sku);
         return sku;
       }
+      const [open, setOpen] = useState(false); // For Dialog control
+        const refCanvas = useRef();
+
+    const toggleDialog = () => {
+    setOpen(!open);
+    };
 
 
       function get_isShadow(){
@@ -119,73 +131,82 @@
     </script>
   </head>
 
-    <div class='content'>
+  <Button variant="contained" onClick={toggleDialog}>Open Widget</Button>
+      <Dialog open={open} onClose={toggleDialog} maxWidth="lg" fullWidth>
+        <DialogTitle>Adjust Your Glasses</DialogTitle>
+        <DialogContent>
+            <div class='content'>
 
 
-      <div class='header'>
-        <div class="headerTitle">
-          Jeeliz VTO Widget
-        </div>      
-      </div>
-     <button id='startWidgetButton' onclick='initWidget();'>Start Widget</button>
-
-
-      <!-- Please keep the same element IDs so that JEELIZVTOWIDGET can extract them from the DOM -->
-
-      <!-- BEGIN JEELIZVTOWIDGET -->
-      <!-- 
-        div with id='JeelizVTOWidget' is the placeholder
-        you need to size and position it according to where the VTO widget should be
-        if you resize it, the widget will be automatically resized
-      -->
-      <div id='JeelizVTOWidget'>
-        <!-- MAIN CANVAS: -->
-        <!-- 
-         canvas with id='JeelizVTOWidgetCanvas' is the canvas where the VTO widget will be rendered
-         it should have CSS attribute position: absolute so that it can be resized without
-         changing the total size of the placeholder
-        -->
-        <canvas id='JeelizVTOWidgetCanvas'></canvas>
-        
-        <div class='JeelizVTOWidgetControls JeelizVTOWidgetControlsTop'>
-          <!-- ADJUST BUTTON: -->
-          <button id='JeelizVTOWidgetAdjust'>
-            <div class="buttonIcon"><i class="fas fa-arrows-alt"></i></div>Adjust
-          </button>
-
-          <!-- RESIZE WIDGET BUTTON: -->
-          <button id='buttonResizeCanvas' onclick='test_resizeCanvas();'>
-            <div class="buttonIcon"><i class="fas fa-sync-alt"></i></div>Resize widget
-          </button>
-        </div>
-
-        <!-- CHANGE MODEL BUTTONS: -->
-        <div class='JeelizVTOWidgetControls' id='JeelizVTOWidgetChangeModelContainer'>
-          <button onclick="JEELIZVTOWIDGET.load('rayban_aviator_or_vertFlash')">Model 1</button>
-          <button onclick="JEELIZVTOWIDGET.load('rayban_round_cuivre_pinkBrownDegrade')">Model 2</button>
-          <button onclick="JEELIZVTOWIDGET.load_modelStandalone('glasses3D/glasses1.json')">Model 3</button>
-          <button onclick="load_modelBySKU()">by SKU</button>
-        </div>
-
-        <!-- BEGIN ADJUST NOTICE -->
-        <div id='JeelizVTOWidgetAdjustNotice'>
-          Move the glasses to adjust them.
-          <button className='JeelizVTOWidgetButton JeelizVTOWidgetAdjustExitButton' onClick={exit_adjustMode}>
-            Quit
-          </button>
-        </div>
-        <!-- END AJUST NOTICE -->
-
-        <!-- BEGIN LOADING WIDGET (not model) -->
-        <div id='JeelizVTOWidgetLoading'>
-           <div class='JeelizVTOWidgetLoadingText'>
-              LOADING...
-            </div>
-        </div>
-        <!-- END LOADING -->
-
-      </div>
-    </div>
+                <div class='header'>
+                  <div class="headerTitle">
+                    Jeeliz VTO Widget
+                  </div>      
+                </div>
+               <button id='startWidgetButton' onclick='initWidget();'>Start Widget</button>
+          
+          
+                <!-- Please keep the same element IDs so that JEELIZVTOWIDGET can extract them from the DOM -->
+          
+                <!-- BEGIN JEELIZVTOWIDGET -->
+                <!-- 
+                  div with id='JeelizVTOWidget' is the placeholder
+                  you need to size and position it according to where the VTO widget should be
+                  if you resize it, the widget will be automatically resized
+                -->
+                <div id='JeelizVTOWidget'>
+                  <!-- MAIN CANVAS: -->
+                  <!-- 
+                   canvas with id='JeelizVTOWidgetCanvas' is the canvas where the VTO widget will be rendered
+                   it should have CSS attribute position: absolute so that it can be resized without
+                   changing the total size of the placeholder
+                  -->
+                  <canvas id='JeelizVTOWidgetCanvas'></canvas>
+                  
+                  <div class='JeelizVTOWidgetControls JeelizVTOWidgetControlsTop'>
+                    <!-- ADJUST BUTTON: -->
+                    <button id='JeelizVTOWidgetAdjust'>
+                      <div class="buttonIcon"><i class="fas fa-arrows-alt"></i></div>Adjust
+                    </button>
+          
+                    <!-- RESIZE WIDGET BUTTON: -->
+                    <button id='buttonResizeCanvas' onclick='test_resizeCanvas();'>
+                      <div class="buttonIcon"><i class="fas fa-sync-alt"></i></div>Resize widget
+                    </button>
+                  </div>
+          
+                  <!-- CHANGE MODEL BUTTONS: -->
+                  <div class='JeelizVTOWidgetControls' id='JeelizVTOWidgetChangeModelContainer'>
+                    <button onclick="JEELIZVTOWIDGET.load('rayban_aviator_or_vertFlash')">Model 1</button>
+                    <button onclick="JEELIZVTOWIDGET.load('rayban_round_cuivre_pinkBrownDegrade')">Model 2</button>
+                    <button onclick="JEELIZVTOWIDGET.load_modelStandalone('glasses3D/glasses1.json')">Model 3</button>
+                    <button onclick="load_modelBySKU()">by SKU</button>
+                  </div>
+          
+                  <!-- BEGIN ADJUST NOTICE -->
+                  <div id='JeelizVTOWidgetAdjustNotice'>
+                    Move the glasses to adjust them.
+                    <button class='JeelizVTOWidgetBottomButton' id='JeelizVTOWidgetAdjustExit'>Quit</button>
+                  </div>
+                  <!-- END AJUST NOTICE -->
+          
+                  <!-- BEGIN LOADING WIDGET (not model) -->
+                  <div id='JeelizVTOWidgetLoading'>
+                     <div class='JeelizVTOWidgetLoadingText'>
+                        LOADING...
+                      </div>
+                  </div>
+                  <!-- END LOADING -->
+          
+                </div>
+              </div>
+          <div className='JeelizVTOWidget'>
+            <canvas ref={refCanvas} className='JeelizVTOWidgetCanvas'></canvas>
+            {/* Other widget elements as needed */}
+          </div>
+        </DialogContent>
+      </Dialog>
+    
   </body>
 </html>
  

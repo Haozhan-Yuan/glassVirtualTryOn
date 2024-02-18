@@ -1,4 +1,8 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import Button from '@mui/material/Button';
 
 import { JEELIZVTO, JEELIZVTOWIDGET } from 'jeelizvtowidget'
 //import { JEELIZVTO, JEELIZVTOWIDGET } from '../../../../../npm/package/index.js'
@@ -54,8 +58,13 @@ function init_VTOWidget(placeHolder, canvas, toggle_loading){
 
 
 function AppCanvas(props){
+  const [open, setOpen] = useState(false); // For Dialog control
+  const refCanvas = useRef();
+
+  const toggleDialog = () => {
+    setOpen(!open);
+  };
   const refPlaceHolder = useRef()
-  const refCanvas = useRef()
   const refAdjustEnter = useRef()
   const refAdjust = useRef()
   const refChangeModel = useRef()
@@ -94,36 +103,20 @@ function AppCanvas(props){
   }, [])
 
   return (
-    <div ref={refPlaceHolder} className='JeelizVTOWidget'>
-      <canvas ref={refCanvas} className='JeelizVTOWidgetCanvas'></canvas>
-      
-      <div ref={refAdjustEnter} className='JeelizVTOWidgetControls'>
-        <button className='JeelizVTOWidgetButton JeelizVTOWidgetAdjustEnterButton' onClick={enter_adjustMode}>
-          Adjust
-        </button>
-      </div>
-
-      <div ref={refAdjust} className='JeelizVTOWidgetAdjustNotice'>
-        Move the glasses to adjust them.
-        <button className='JeelizVTOWidgetButton JeelizVTOWidgetAdjustExitButton' onClick={exit_adjustMode}>
-          Quit
-        </button>
-      </div>
-
-      <div ref={refChangeModel} className='JeelizVTOWidgetControls JeelizVTOWidgetChangeModelContainer'>
-        <button className='JeelizVTOWidgetButton' onClick={set_glassesModel.bind(this, 'rayban_aviator_or_vertFlash')}>Model 1</button>
-        <button className='JeelizVTOWidgetButton' onClick={set_glassesModel.bind(this, 'rayban_round_cuivre_pinkBrownDegrade')}>Model 2</button>
-        <button className='JeelizVTOWidgetButton' onClick={set_glassesModel.bind(this, 'carrera_113S_blue')}>Model 3</button>
-      </div>
-
-      <div ref={refLoading} className='JeelizVTOWidgetLoading'>
-       <div className='JeelizVTOWidgetLoadingText'>
-          LOADING...
-        </div>
-      </div>
-
-    </div>
-  )
+    <>
+      <Button variant="contained" onClick={toggleDialog}>Open Widget</Button>
+      <Dialog open={open} onClose={toggleDialog} maxWidth="lg" fullWidth>
+        <DialogTitle>Adjust Your Glasses</DialogTitle>
+        <DialogContent>
+          {/* Your existing widget code here, adjusted for Dialog */}
+          <div className='JeelizVTOWidget'>
+            <canvas ref={refCanvas} className='JeelizVTOWidgetCanvas'></canvas>
+            {/* Other widget elements as needed */}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
 
 export default AppCanvas
