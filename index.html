@@ -49,7 +49,12 @@
         return URLParams.get('isHideShadow') ? false : true;
       }
 
-
+      const exit_adjustMode = () => {
+    JEELIZVTOWIDGET.exit_adjustMode()
+    refAdjustEnter.current.style.display = 'block'
+    refAdjust.current.style.display = 'none'
+    refChangeModel.current.style.display = 'block'
+  }
       // entry point:
       function initWidget() {
         document.getElementById('JeelizVTOWidgetLoading').style.display = 'block';
@@ -165,7 +170,9 @@
         <!-- BEGIN ADJUST NOTICE -->
         <div id='JeelizVTOWidgetAdjustNotice'>
           Move the glasses to adjust them.
-          <button class='JeelizVTOWidgetBottomButton' id='JeelizVTOWidgetAdjustExit'>Quit</button>
+          <button className='JeelizVTOWidgetButton JeelizVTOWidgetAdjustExitButton' onClick={exit_adjustMode}>
+            Quit
+          </button>
         </div>
         <!-- END AJUST NOTICE -->
 
