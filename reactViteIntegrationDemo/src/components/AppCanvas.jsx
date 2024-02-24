@@ -103,27 +103,13 @@ function AppCanvas(props) {
     refChangeModel.current.style.display = 'block'
   }
 
-  const set_glassesModel = (sku) => {
-    console.log('sku', sku)
-    JEELIZVTOWIDGET.load(sku)
-  }
+  
   const loadModel3 = () => {
     JEELIZVTOWIDGET.load_modelStandalone(model);
   }
 
   useEffect(() => {
-    // Attach set_glassesModel to window for global access
-    window.set_glassesModel = set_glassesModel;
-
-    // Cleanup function to remove set_glassesModel from window
-    return () => {
-      delete window.set_glassesModel;
-    };
-  }, []);
-  
-  useEffect(() => {
     // Only initialize the widget if the dialog is open
-    
     setTimeout(() => {
 
 
