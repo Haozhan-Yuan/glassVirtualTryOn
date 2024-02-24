@@ -7,56 +7,16 @@ import Dialog from '@mui/material/Dialog';
 import searchImage from '../assets/target512.jpg'
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import model from '../assets/Sample_X2.json'
 
 
 
-function init_VTOWidget(placeHolder, canvas, toggle_loading) {
-  JEELIZVTOWIDGET.start({
-    placeHolder,
-    canvas,
-    callbacks: {
-      ADJUST_START: null,
-      ADJUST_END: null,
-      LOADING_START: toggle_loading.bind(null, true),
-      LOADING_END: toggle_loading.bind(null, false)
-    },
-    sku: 'empty', // SKU loadded at the beginning
-    // image displayed when face is not found:
-    searchImageMask: searchImage, //'https://appstatic.jeeliz.com/jeewidget/images/target.png',
-    searchImageColor: 0xeeeeee, // color of loading (face not found) animation
-    searchImageRotationSpeed: -0.001, // negative -> clockwise
-    callbackReady: function () {
-      console.log('INFO: JEELIZVTOWIDGET is ready :)')
-    },
-    onError: function (errorLabel) { // this function catches errors, so you can display custom integrated messages
-      alert('An error happened. errorLabel =' + errorLabel)
-      switch (errorLabel) {
-        case 'WEBCAM_UNAVAILABLE':
-          // the user has no camera, or does not want to share it.
-          break
 
-        case 'INVALID_SKU':
-          // the provided SKU does not match with a glasses model
-          break
-
-        case 'PLACEHOLDER_NULL_WIDTH':
-        case 'PLACEHOLDER_NULL_HEIGHT':
-          // Something is wrong with the placeholder
-          // (element whose id='JeelizVTOWidget')
-          break
-
-        case 'FATAL':
-        default:
-          // a bit error happens:(
-          break
-      } // end switch
-    } // end onError()
-  }) // end JEELIZVTOWIDGET.start call
-}
 
 
 function AppCanvas(props) {
   const [open, setOpen] = useState(false);
+  const [modal3, setModal3] = useState(false);
   const [widgetInitialized, setWidgetInitialized] = useState(false);
   const refPlaceHolder = useRef()
   const refCanvas = useRef()
@@ -65,17 +25,67 @@ function AppCanvas(props) {
   const refChangeModel = useRef()
   const refLoading = useRef()
 
+  function init_VTOWidget(placeHolder, canvas, toggle_loading) {
+    console.log('start:', placeHolder, canvas)
+    JEELIZVTOWIDGET.start({
+      placeHolder,
+      canvas,
+      callbacks: {
+        ADJUST_START: null,
+        ADJUST_END: null,
+        LOADING_START: toggle_loading.bind(null, true),
+        LOADING_END: toggle_loading.bind(null, false)
+      },
+      sku: 'empty', // SKU loadded at the beginning
+      // image displayed when face is not found:
+      searchImageMask: searchImage, //'https://appstatic.jeeliz.com/jeewidget/images/target.png',
+      searchImageColor: 0xeeeeee, // color of loading (face not found) animation
+      searchImageRotationSpeed: -0.001, // negative -> clockwise
+      callbackReady: function () {
+        console.log('INFO: JEELIZVTOWIDGET is ready :)')
+        const test = JEELIZVTOWIDGET.load_modelStandalone(model);
+        console.log(test)
+        setModal3(true)
+      },
+      onError: function (errorLabel) { // this function catches errors, so you can display custom integrated messages
+        alert('An error happened. errorLabel =' + errorLabel)
+        switch (errorLabel) {
+          case 'WEBCAM_UNAVAILABLE':
+            // the user has no camera, or does not want to share it.
+            break
+
+          case 'INVALID_SKU':
+            // the provided SKU does not match with a glasses model
+            break
+
+          case 'PLACEHOLDER_NULL_WIDTH':
+          case 'PLACEHOLDER_NULL_HEIGHT':
+            // Something is wrong with the placeholder
+            // (element whose id='JeelizVTOWidget')
+            break
+
+          case 'FATAL':
+          default:
+            // a bit error happens:(
+            break
+        } // end switch
+      } // end onError()
+    }) // end JEELIZVTOWIDGET.start call
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     console.log("widget pause");
-    JEELIZVTOWIDGET.pause(true);
+    //JEELIZVTOWIDGET.pause(true);
+    JEELIZVTOWIDGET.destroy();
     setOpen(false);
   };
 
   const toggle_loading = (isLoadingVisible) => {
+    console.log('isLoadingVisible', isLoadingVisible)
     refLoading.current.style.display = (isLoadingVisible) ? 'block' : 'none'
   }
 
@@ -94,14 +104,18 @@ function AppCanvas(props) {
   }
 
   const set_glassesModel = (sku) => {
+    console.log('sku', sku)
     JEELIZVTOWIDGET.load(sku)
+  }
+  const loadModel3 = () => {
+    JEELIZVTOWIDGET.load_modelStandalone(model);
   }
 
   useEffect(() => {
     // Only initialize the widget if the dialog is open
     setTimeout(() => {
- 
-  
+
+
     // Cleanup function to run when the component unmounts or before re-running the effect
     if (open && !widgetInitialized) { // `widgetInitialized` should be a state or a ref indicating if the widget has been initialized
       const placeHolder = refPlaceHolder.current;
@@ -114,11 +128,12 @@ function AppCanvas(props) {
       // JEELIZVTOWIDGET.resume(false);
       const placeHolder = refPlaceHolder.current;
       const canvas = refCanvas.current;
+      //JEELIZVTOWIDGET.resume(true);
       init_VTOWidget(placeHolder, canvas, toggle_loading);
       //init_VTOWidget(refPlaceHolder.current, refCanvas.current, toggle_loading);
     }
-  
-  
+
+
     // Cleanup function runs when the dialog closes
     return () => {
       if (!open) {
@@ -130,24 +145,24 @@ function AppCanvas(props) {
     };
   }, 0); 
   }, [open]); // Dependency array remains the same
-  
+
   return (
     <>
     <Button variant="outlined" onClick={handleClickOpen}>
         Open max-width dialog
       </Button>
-    <Dialog
+    { <Dialog
       open={open}
       onClose={handleClose}
       fullWidth={true}
       maxWidth={'md'} // Adjust based on your preference
       style={{ height: '50vh' }} // Adjust the height to half of the viewport
     >
-      
-     
+
+
       <div ref={refPlaceHolder} className='JeelizVTOWidget'>
       <canvas ref={refCanvas} className='JeelizVTOWidgetCanvas'></canvas>
-      
+
       <div ref={refAdjustEnter} className='JeelizVTOWidgetControls'>
         <button className='JeelizVTOWidgetButton JeelizVTOWidgetAdjustEnterButton' onClick={enter_adjustMode}>
           Adjust
@@ -164,7 +179,8 @@ function AppCanvas(props) {
       <div ref={refChangeModel} className='JeelizVTOWidgetControls JeelizVTOWidgetChangeModelContainer'>
         <button className='JeelizVTOWidgetButton' onClick={set_glassesModel.bind(this, 'rayban_aviator_or_vertFlash')}>Model 1</button>
         <button className='JeelizVTOWidgetButton' onClick={set_glassesModel.bind(this, 'rayban_round_cuivre_pinkBrownDegrade')}>Model 2</button>
-        {/* <button className='JeelizVTOWidgetButton' onClick={JEELIZVTOWIDGET.load_modelStandalone('glasses3D/Sample_X2.json')}>Model 3</button> */}
+        {/* { modal3 && <button className='JeelizVTOWidgetButton' onClick={JEELIZVTOWIDGET.load_modelStandalone(model)}>Model 3</button>} */}
+        {<button className='JeelizVTOWidgetButton' onClick={loadModel3}>Model 3</button>}
       </div>
 
       <div ref={refLoading} className='JeelizVTOWidgetLoading'>
@@ -177,9 +193,9 @@ function AppCanvas(props) {
     <DialogActions>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
-    </Dialog>
+    </Dialog>}
   </>
-    
+
   )
 }
 
