@@ -1,0 +1,5 @@
+[[headers]]
+  # Define which paths this rule applies to
+  for = "/assets/*"
+  [headers.values]
+  Access-Control-Allow-Origin = "*"
