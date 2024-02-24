@@ -24,6 +24,7 @@ function AppCanvas(props) {
   const refAdjust = useRef()
   const refChangeModel = useRef()
   const refLoading = useRef()
+  window.set_glassesModel = set_glassesModel;
 
   function init_VTOWidget(placeHolder, canvas, toggle_loading) {
     console.log('start:', placeHolder, canvas)
