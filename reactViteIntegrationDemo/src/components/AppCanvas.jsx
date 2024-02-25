@@ -77,6 +77,19 @@ function AppCanvas(props) {
     setOpen(true);
   };
 
+  const set_glassesModel = (sku) => {
+    console.log('Changing model to SKU:', sku);
+    JEELIZVTOWIDGET.load(sku); // Assuming JEELIZVTOWIDGET.load is the correct method to change the model
+  };
+  useEffect(() => {
+    // Attach set_glassesModel to window for global access
+    window.set_glassesModel = set_glassesModel;
+
+    // Cleanup function to remove set_glassesModel from window
+    return () => {
+      delete window.set_glassesModel;
+    };
+  }, []);
   const handleClose = () => {
     console.log("widget pause");
     //JEELIZVTOWIDGET.pause(true);
