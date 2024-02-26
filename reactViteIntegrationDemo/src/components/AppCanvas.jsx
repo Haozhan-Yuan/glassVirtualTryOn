@@ -73,6 +73,14 @@ function AppCanvas(props) {
     }) // end JEELIZVTOWIDGET.start call
   }
 
+  function changeModel(sku) {
+    if (window.JEELIZVTOWIDGET) {
+      window.JEELIZVTOWIDGET.load(sku);
+    } else {
+      console.error("Jeeliz VTO widget is not initialized.");
+    }
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
   };
